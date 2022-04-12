@@ -2,6 +2,9 @@
   "name": "pw_backend",
   "version": "1.0.0",
   "description": "Project Work Back-End",
+  "engines": {
+    "node": "16.13.2"
+  },
   "main": "app.js",
   "dependencies": {
     "bcrypt": "^5.0.1",
