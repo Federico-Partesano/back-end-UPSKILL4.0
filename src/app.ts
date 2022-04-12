@@ -16,7 +16,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cors());
 
 //-MongoDB connection
-dbConnect();
+// dbConnect();
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/auth', auth);
