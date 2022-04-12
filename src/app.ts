@@ -4,7 +4,7 @@ import { dbConnect } from './config/mongo.config';
 import YAML from 'yamljs';
 import swaggerUi from 'swagger-ui-express';
 const app = express();
-const PORT = 3003;
+const PORT = process.env.PORT || 3001;
 //--- Routes imports ---
 import auth from './routes/auth';
 import sensors from './routes/sensors';
