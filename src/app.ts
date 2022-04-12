@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3001;
 import auth from './routes/auth';
 import sensors from './routes/sensors';
 
-const swaggerDocument = YAML.load('./public/swagger/openapi.yml');
+// const swaggerDocument = YAML.load('./public/swagger/openapi.yml');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -18,7 +18,7 @@ app.use(cors());
 //-MongoDB connection
 // dbConnect();
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/auth', auth);
 app.use('/sensors', sensors);
 
