@@ -1,0 +1,1 @@
+export type MachineStatus = 'OK' | 'CHECK' | 'ALERT';

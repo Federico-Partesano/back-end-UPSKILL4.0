@@ -1,0 +1,280 @@
+openapi: "3.0.0"
+info:
+  title: 'STIMA Project CRUD'
+  description: 'STIMA Project Application API'
+  version: 1.0.0
+
+servers:
+  - url: 'http://localhost:3003/'
+    description: 'Local development'
+  - url: 'https://path.com/dev/'
+    description: 'Stage'
+  - url: 'https://path.com/prod/'
+    description: 'Production'
+
+paths:
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: 'Signin'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginPayload'
+      responses:
+        '200':
+          description: 'Login successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: 'Invalid credentials'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: 'User not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: 'Signup'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupPayload'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+      responses:
+        '200':
+          description: 'Signup successful'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '409':
+          description: 'Email already registered'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /sensors/machines:
+    get:
+      tags:
+        - Machines
+      summary: 'Get all sensors of all machines'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: last
+          description: 'last sensor value of all machines'
+          schema:
+            type: string
+        - in: query
+          name: place
+          description: 'place of sensors of all machines'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Array of sensors'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachinesSensorsResponse'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /machines/{number}:
+    get:
+      tags:
+        - Machines
+      summary: 'Get machine by number'
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: number
+          schema:
+            type: number
+          required: true
+      responses:
+        '200':
+          description: 'Machine by number'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MachineResponse'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '403':
+          description: 'Forbidden'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+    MachineResponse:
+      type: object
+      properties:
+        id:
+          type: number
+    MachinesSensorsResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        payload:
+          type: object
+          properties:
+            _id:
+              type: string
+            idDevice:
+              type: string
+            idUser:
+              type: string
+            sensors:
+              type: array
+              items:
+                type: object
+                properties:
+                  machine:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      typology:
+                        type: string
+                      status:
+                        type: string
+                  id:
+                    type: string
+                  range:
+                    type: object
+                    properties:
+                      min:
+                        type: number
+                      max:
+                        type: number
+                  typology:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        value:
+                          type: number
+                        timestamp:
+                          type: number
+            __v:
+              type: number
+    LoginPayload:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    SignupPayload:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        createdAt:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        tokenJwt:
+          type: string
+        user:
+          type: object
+          properties:
+            email:
+              type: string
+            name:
+              type: string
+            createdAt:
+              type: string
